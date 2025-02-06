@@ -1,13 +1,13 @@
 {
-  "name": "expedia-test-audio-stream",
+  "name": "expedia-audio-stream-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Node (Express) server to listen to client streaming audio files for playback",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Ajay Sharma",
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.1692.0",
