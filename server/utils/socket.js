@@ -1,11 +1,9 @@
 import * as uuid from 'uuid';
-import fs from 'fs';
 import config from '../config/index.js';
 import axios from 'axios';
 // Function to be triggered on socket connection when established 
 export const onSocketConnection = (s3, socket) => {
-  console.info('New WebSocket connection');
-  let audioChunks = [];
+  console.info(new Date(), 'New WebSocket connection');
   // Handle end of audio recording
   socket.on('stop-recording', async (audioData) => {
     console.info(new Date(), 'Recording stopped, audioData received = ', audioData);
@@ -45,30 +43,11 @@ export const uploadToS3 = async (presignedUrl, audioData) => {
           if (!res) {
               throw new Error('Invalid response on uploading file to s3 = ', res);
           }
-          console.info('Audio file uploaded successfully');
+          console.info(new Date(), 'Audio file uploaded successfully');
           resolve();
       } catch (e) {
           console.error('Error uploading file to s3 = ', e);
           reject(e);
       }
     });
-  };
-  // Function to save metadata to DynamoDB
-  export const saveToDynamoDB = async (s3Key) => {
-    const params = {
-      TableName: config.AWS.DYNAMODB_AUDIO_METADATA_TABLE,
-      Item: {
-        recordId: uuid.v4(),
-        timestamp: Date.now(),
-        s3Key: s3Key,
-        audioFileUrl: `https://${config.AWS.S3_AUDIO_BUCKET}.s3.amazonaws.com/${s3Key}`,
-        createdAt: new Date().toISOString(),
-      },
-    };  
-    try {
-      await dynamoDB.put(params).promise();
-      console.info('Metadata saved to DynamoDB');
-    } catch (error) {
-      console.error('Error saving metadata to DynamoDB:', error);
-    }
   };
